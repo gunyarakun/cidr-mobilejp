@@ -4,7 +4,6 @@
 
 import urllib
 import re
-from math import ceil
 
 class Docomo(object):
   def name(self):
