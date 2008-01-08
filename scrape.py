@@ -103,7 +103,7 @@ def get_cidr():
   # output php source
   print """<?php
 function ip2mobile($ip) {
-  $n = ip2long($ip);
+  $n = sprintf('%u', ip2long($ip));
 """
   output_php(mranges, 0, len(mranges) - 1, 2)
   print """  return 'pc';
