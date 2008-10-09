@@ -35,12 +35,12 @@ class Softbank(object):
     return 'softbank'
 
   def url(self):
-    return 'http://developers.softbankmobile.co.jp/dp/tech_svc/web/ip.php'
+    return 'http://creation.mb.softbank.jp/web/web_ip.html'
 
   def run(self):
     content = urllib.urlopen(self.url()).read()
     n = self.name()
-    pattern = '<FONT size="2" class="j10".*?>([\d\./]+)</FONT>'
+    pattern = '<td bgcolor="#eeeeee">&nbsp;&nbsp;([\d\./]+)</td>'
     return [(ip, n) for ip in re.findall(pattern, content, re.M)]
 
 class AirHPhone(object):
