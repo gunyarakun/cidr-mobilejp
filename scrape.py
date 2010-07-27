@@ -5,6 +5,8 @@
 import urllib
 import re
 
+DEBUG = False
+
 class Docomo(object):
   def name(self):
     return 'docomo'
@@ -15,7 +17,7 @@ class Docomo(object):
   def run(self):
     content = urllib.urlopen(self.url()).read()
     n = self.name()
-    return [(ip, n) for ip in re.findall(r'<li>([\d\./]+)</li>', content, re.M)]
+    return [(ip, n) for ip in re.findall(r'<li>(\d+\.\d+\.\d+\.\d+/\d+)[^<]*</li>', content, re.M)]
 
 class Ezweb(object):
   def name(self):
@@ -40,7 +42,7 @@ class Softbank(object):
   def run(self):
     content = urllib.urlopen(self.url()).read()
     n = self.name()
-    pattern = '<td bgcolor="#eeeeee">&nbsp;&nbsp;([\d\./]+)</td>'
+    pattern = '<td bgcolor="#eeeeee">&nbsp;&nbsp;(\d+\.\d+\.\d+\.\d+\./\d+)</td>'
     return [(ip, n) for ip in re.findall(pattern, content, re.M)]
 
 class AirHPhone(object):
@@ -48,12 +50,12 @@ class AirHPhone(object):
     return 'airhphone'
 
   def url(self):
-    return 'http://www.willcom-inc.com/ja/service/contents_service/club_air_edge/for_phone/ip/'
+    return 'http://www.willcom-inc.com/ja/service/contents_service/create/center_info/index.html'
 
   def run(self):
     content = urllib.urlopen(self.url()).read()
     n = self.name()
-    pattern = '<td align="center" bgcolor="#f5f5f5" width="50%"><font size="2">([\d\./]+)</font></td>'
+    pattern = '<td align="center" bgcolor="white"><font size="2">(\d+\.\d+\.\d+\.\d+/\d+)</font></td>'
     return [(ip, n) for ip in re.findall(pattern, content, re.M)]
 
 def get_cidr():
@@ -62,6 +64,10 @@ def get_cidr():
   for carrier in classes:
     c = carrier()
     sources += c.run()
+    if DEBUG:
+      print '** %s **' % c.name()
+      for s in sources:
+        print s[0]
 
   # convert cidr to ipaddress
   import socket, struct
